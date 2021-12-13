@@ -10,7 +10,7 @@ private:
 public:
     BTree(){
 
-        this->order = M;
+        order = M;
 
     }
 
