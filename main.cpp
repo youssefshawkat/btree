@@ -2,15 +2,15 @@
 
 using namespace std;
 
-template <class T>
+template <class T,int M>
 
 class BTree{
 private:
     T order;
 public:
-    BTree(T order){
+    BTree(){
 
-        this->order = order;
+        this->order = M;
 
     }
 
@@ -21,7 +21,7 @@ public:
 
 
 int main() {
-    BTree<int> t1(3);
+    BTree<int,3> t1();
 
 
     return 0;
