@@ -2,9 +2,25 @@
 
 using namespace std;
 
+
+template <class T>
+
+class BtreeNode{
+
+private:
+
+
+
+
+
+
+};
+
+
 template <class T,int M>
 
 class BTree{
+
 private:
     T order;
 public:
