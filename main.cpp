@@ -3,11 +3,14 @@
 using namespace std;
 
 
-template <class T,int M>
+template <class T,int m>
 
 class BtreeNode{
 
 private:
+    bool root = false;
+    T* keys;
+    BtreeNode** children;
 
 
 
@@ -17,7 +20,7 @@ private:
 };
 
 
-template <class T,int M>
+template <class T,int m>
 
 class BTree{
 
@@ -27,7 +30,7 @@ private:
 public:
     BTree(){
 
-        order = M;
+        order = m;
 
     }
 
