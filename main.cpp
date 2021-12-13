@@ -3,7 +3,7 @@
 using namespace std;
 
 
-template <class T>
+template <class T,int M>
 
 class BtreeNode{
 
