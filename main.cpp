@@ -21,7 +21,7 @@ public:
 
 
 int main() {
-    BTree<int,3> t1();
+    BTree<int,3> t1;
 
 
     return 0;
