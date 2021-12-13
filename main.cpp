@@ -22,7 +22,8 @@ template <class T,int M>
 class BTree{
 
 private:
-    T order;
+    int order;
+
 public:
     BTree(){
 
