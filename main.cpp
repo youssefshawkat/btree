@@ -6,7 +6,7 @@ using namespace std;
 class BTreeNode
 {
     int* keys; // An array of keys
-    int t;	 // Minimum degree (defines the range for number of keys)
+    int Min_Child;	 // Minimum degree (defines the range for number of keys)
     int order; // order of the tree
     BTreeNode** children; // An array of child pointers
     int num_keys;	 // Current number of keys
@@ -14,7 +14,7 @@ class BTreeNode
 public:
     BTreeNode(bool _leaf, int m)
     {
-        t = ceiling(m / 2);
+        Min_Child = roundup(m);
         leaf = _leaf;
         order = m;
 
@@ -58,7 +58,7 @@ public:
                 i--;
 
             // See if the found child is full
-            if (children[i + 1]->num_keys == 2 * t - 1)
+            if (children[i + 1]->num_keys == 2 * Min_Child - 1)
             {
                 // If the child is full, then split it
                 splitChild(i + 1, children[i + 1]);
@@ -74,13 +74,22 @@ public:
     }
 
     //rounding up
-    int ceiling(float num)
+
+    static int roundup(int num)
     {
-        int inum = (int)num;
-        if (num == (float)inum) {
+        int inum;
+        if(num % 2 ==0){
+
+            inum=num/2;
             return inum;
         }
-        return inum + 1;
+        else{
+
+
+            inum = (num/2) + 1;
+            return inum;
+
+        }
     }
 
     // A utility function to split the child y of this node. i is index of y in
@@ -90,21 +99,21 @@ public:
         // Create a new node which is going to store (t-1) keys
         // of y
         BTreeNode* z = new BTreeNode(y->leaf, y->order);
-        z->num_keys = t - 1;
+        z->num_keys = Min_Child - 1;
 
         // Copy the last (t-1) keys of y to z
-        for (int j = 0; j < t - 1; j++)
-            z->keys[j] = y->keys[j + t];
+        for (int j = 0; j < Min_Child - 1; j++)
+            z->keys[j] = y->keys[j +Min_Child];
 
         // Copy the last t children of y to z
         if (y->leaf == false)
         {
-            for (int j = 0; j < t; j++)
-                z->children[j] = y->children[j + t];
+            for (int j = 0; j < Min_Child; j++)
+                z->children[j] = y->children[j +Min_Child];
         }
 
         // Reduce the number of keys in y
-        y->num_keys = t - 1;
+        y->num_keys = Min_Child - 1;
 
         // Since this node is going to have a new child,
         // create space of new child
@@ -120,7 +129,7 @@ public:
             keys[j + 1] = keys[j];
 
         // Copy the middle key of y to this node
-        keys[i] = y->keys[t - 1];
+        keys[i] = y->keys[Min_Child - 1];
 
         // Increment count of keys in this node
         num_keys = num_keys + 1;
@@ -156,24 +165,20 @@ public:
 class BTree
 {
     BTreeNode* root; // Pointer to root node
-    int t; // Minimum degree
+    //int t; // Minimum degree
+    int Min_Child;
     int order; // order of the tree
+
 public:
 
-    int ceiling(float num)
-    {
-        int inum = (int)num;
-        if (num == (float)inum) {
-            return inum;
-        }
-        return inum + 1;
-    }
+    int T_keys;
 
     // Constructor (Initializes tree as empty)
     BTree(int m)
     {
+        T_keys = 0;
         root = NULL;
-        t= ceiling(m/2);
+        Min_Child= BTreeNode::roundup(m);
         order = m;
     }
 
@@ -186,6 +191,7 @@ public:
     // The main function that inserts a new key in this B-Tree
     void insert(int k)
     {
+        T_keys++;
         // If tree is empty
         if (root == NULL)
         {
@@ -197,7 +203,7 @@ public:
         else // If tree is not empty
         {
             // If root is full, then tree grows in height
-            if (root->num_keys == 2 * t - 1)
+            if (root->num_keys == 2 * Min_Child - 1)
             {
                 // Allocate memory for new root
                 BTreeNode* s = new BTreeNode(false, order);
@@ -235,7 +241,6 @@ int main()
     t.insert(4);
     t.insert(3);
     t.insert(2);
-
 
     cout << "Traversal of the constructed tree is: ";
     t.traverse();
