@@ -1,26 +1,27 @@
 // C++ program for B-Tree insertion
 #include<iostream>
 using namespace std;
-
+template <class T,int m>
 // A BTree node
 class BTreeNode
 {
-    int* keys; // An array of keys
+    T* keys; // An array of keys
     int Min_Child;	 // Minimum degree (defines the range for number of keys)
     int order; // order of the tree
     BTreeNode** children; // An array of child pointers
     int num_keys;	 // Current number of keys
     bool leaf; // Is true when node is leaf. Otherwise false
 public:
-    BTreeNode(bool _leaf, int m)
+    BTreeNode(bool _leaf , int m)
     {
         Min_Child = roundup(m);
+
         leaf = _leaf;
         order = m;
 
         // Allocate memory for maximum number of possible keys
         // and child pointers
-        keys = new int[order - 1];
+        keys = new T[order - 1];
         children = new BTreeNode * [order];
 
         // Initialize the number of keys as 0
@@ -60,6 +61,7 @@ public:
             // See if the found child is full
             if (children[i + 1]->num_keys == 2 * Min_Child - 1)
             {
+                cout<<"Hello"<<endl;
                 // If the child is full, then split it
                 splitChild(i + 1, children[i + 1]);
 
@@ -140,14 +142,17 @@ public:
     {
         // There are n keys and n+1 children, traverse through n keys
         // and first n children
+        cout<<"keys Number:"<< this->num_keys << endl;
+        getKeys();
         int i;
         for (i = 0; i < num_keys; i++)
         {
-            // If this is not leaf, then before printing key[i],
-            // traverse the subtree rooted with child C[i].
+
+
             if (leaf == false)
+
                 children[i]->traverse();
-            cout << " " << keys[i];
+
         }
 
         // Print the subtree rooted with last child
@@ -156,15 +161,34 @@ public:
     }
 
 
+    void getKeys(){
+
+        for(int i =0 ; i < num_keys; i++){
+
+            cout <<keys[i];
+
+            if(i < num_keys-1) {
+                cout << ",";
+            }
+        }
+
+        cout <<endl;
+
+
+    }
+
+
+
     // Make BTree friend of this so that we can access private members of this
     // class in BTree functions
-    friend class BTree;
+    template<class T,int m> friend class BTree;
 };
 
 // A BTree
+template <class T,int m>
 class BTree
 {
-    BTreeNode* root; // Pointer to root node
+    BTreeNode<T,m>* root; // Pointer to root node
     //int t; // Minimum degree
     int Min_Child;
     int order; // order of the tree
@@ -173,12 +197,21 @@ public:
 
     int T_keys;
 
+
+    BTree() {
+
+        T_keys = 0;
+        root = NULL;
+        Min_Child= BTreeNode<T,m>::roundup(m);
+        order = m;
+    }
+
     // Constructor (Initializes tree as empty)
     BTree(int m)
     {
         T_keys = 0;
         root = NULL;
-        Min_Child= BTreeNode::roundup(m);
+        Min_Child= BTreeNode<T,order>::roundup(m);
         order = m;
     }
 
@@ -196,7 +229,7 @@ public:
         if (root == NULL)
         {
             // Allocate memory for root
-            root = new BTreeNode(true, order);
+            root = new BTreeNode<T,m>(true, order);
             root->keys[0] = k;  // Insert key
             root->num_keys = 1;  // Update number of keys in root
         }
@@ -206,7 +239,7 @@ public:
             if (root->num_keys == 2 * Min_Child - 1)
             {
                 // Allocate memory for new root
-                BTreeNode* s = new BTreeNode(false, order);
+                BTreeNode<T,m>* s = new BTreeNode<T,m>(false, order);
 
                 // Make old root as child of new root
                 s->children[0] = root;
@@ -228,21 +261,37 @@ public:
                 root->insertNonFull(k);
         }
     }
+
+
 };
 
 
 // Driver program to test above functions
 int main()
 {
-    BTree t(3); // A B-Tree of order 3
-    t.insert(1);
-    t.insert(5);
-    t.insert(0);
-    t.insert(4);
-    t.insert(3);
-    t.insert(2);
-
-    cout << "Traversal of the constructed tree is: ";
+     // A B-Tree of order 3
+    BTree<char,5> t;
+    // Look at the example in our lecture:
+    t.insert('G');
+    t.insert('I');
+    t.insert('B');
+    t.insert('J');
+    t.insert('C');
+    t.insert('A');
+    t.insert('K');
+    t.insert('E');
+    t.insert('D');
+    t.insert('S');
+    t.insert('T');
+    t.insert('R');
+    t.insert('L');
+    t.insert('F');
+    t.insert('H');
+    t.insert('M');
+    t.insert('N');
+    t.insert('P');
+    t.insert('Q');
+    cout << "Traversal of the constructed tree is: " <<endl;
     t.traverse();
 
     return 0;
